@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Create Quiz</header>
+
+<div class="container">
+
+    <input type="text" id="quizTitle" placeholder="Quiz Title">
+
+    <input type="text" id="question" placeholder="Question">
+    <input type="text" id="opt1" placeholder="Option 1">
+    <input type="text" id="opt2" placeholder="Option 2">
+    <input type="text" id="opt3" placeholder="Option 3">
+    <input type="text" id="opt4" placeholder="Option 4">
+
+    <select id="correct">
+        <option value="0">Correct Option 1</option>
+        <option value="1">Correct Option 2</option>
+        <option value="2">Correct Option 3</option>
+        <option value="3">Correct Option 4</option>
+    </select>
+
+    <button onclick="addQuestion()">Add Question</button>
+    <button onclick="saveQuiz()">Save Quiz</button>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
