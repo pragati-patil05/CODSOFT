@@ -8,20 +8,27 @@ let timerInterval;
 /* AUTH */
 function register() {
     let username = document.getElementById("username").value;
+     let password = document.getElementById("password").value;
+
     localStorage.setItem("user", username);
+    localStorage.setItem("pass", password);
+
     alert("Registered!");
 }
 
 function login() {
     let username = document.getElementById("username").value;
-    if (username === localStorage.getItem("user")) {
+    let password = document.getElementById("password").value;
+    if (username === localStorage.getItem("user")&&
+    password === localStorage.getItem("pass")) {
         window.location.href = "dashboard.html";
     } else {
-        alert("User not found!");
+        alert("invalid credentials");
     }
 }
 
 function logout() {
+    localStorage.removeItem("user");
     window.location.href = "index.html";
 }
 
@@ -31,13 +38,16 @@ if (window.location.pathname.includes("dashboard.html")) {
         "Welcome, " + localStorage.getItem("user");
 
     let list = document.getElementById("quizList");
-    quizzes.forEach((quiz, index) => {
-        list.innerHTML += `
-            <div>
-                ${quiz.title}
-                <button onclick="startQuiz(${index})">Start</button>
-            </div>`;
-    });
+    list.innerHTML = "";
+
+quizzes.forEach((quiz, index) => {
+    list.innerHTML += `
+        <div style="margin-bottom:10px;">
+            <strong>${quiz.title}</strong>
+            <button onclick="startQuiz(${index})">Start</button>
+            <button onclick="deleteQuiz(${index})" style="background:red;">Delete</button>
+        </div>`;
+});
 }
 
 /* Create Quiz */
@@ -63,6 +73,17 @@ function saveQuiz() {
 function startQuiz(index) {
     localStorage.setItem("currentQuiz", index);
     window.location.href = "quiz.html";
+}
+    function deleteQuiz(index) {
+
+    if (confirm("Are you sure you want to delete this quiz?")) {
+
+        quizzes.splice(index, 1); // remove from array
+
+        localStorage.setItem("quizzes", JSON.stringify(quizzes)); // update storage
+
+        location.reload(); // refresh dashboard
+    }
 }
 
 /* Quiz Logic */
