@@ -1,7 +1,8 @@
 let quizzes = JSON.parse(localStorage.getItem("quizzes")) || [];
 let newQuiz = [];
-let currentIndex = 0;
-let score = 0;
+let currentIndex = parseInt(localStorage.getItem("currentIndex")) || 0;
+let score = parseInt(localStorage.getItem("score")) || 0;
+
 let selectedOption = null;
 let timerInterval;
 
@@ -52,26 +53,68 @@ quizzes.forEach((quiz, index) => {
 
 /* Create Quiz */
 function addQuestion() {
+
     let q = document.getElementById("question").value;
     let options = [
-        opt1.value, opt2.value, opt3.value, opt4.value
+        document.getElementById("opt1").value,
+        document.getElementById("opt2").value,
+        document.getElementById("opt3").value,
+        document.getElementById("opt4").value
     ];
     let correct = document.getElementById("correct").value;
+
+    if (!q || options.includes("")) {
+        alert("Fill all fields!");
+        return;
+    }
+
     newQuiz.push({ question: q, options, correct });
-    alert("Question Added!");
+
+    alert("Question Added! Total Questions: " + newQuiz.length);
+
+    // 🔥 Clear inputs after adding
+    document.getElementById("question").value = "";
+    document.getElementById("opt1").value = "";
+    document.getElementById("opt2").value = "";
+    document.getElementById("opt3").value = "";
+    document.getElementById("opt4").value = "";
 }
 
 function saveQuiz() {
+
     let title = document.getElementById("quizTitle").value;
-    quizzes.push({ title, questions: newQuiz });
+
+    if (!title) {
+        alert("Enter quiz title!");
+        return;
+    }
+
+    let existingQuiz = quizzes.find(q => q.title === title);
+
+    if (existingQuiz) {
+        existingQuiz.questions.push(...newQuiz);
+        alert("Questions added to existing quiz!");
+    } else {
+        quizzes.push({
+            title,
+            questions: newQuiz
+        });
+        alert("New Quiz Created!");
+    }
+
     localStorage.setItem("quizzes", JSON.stringify(quizzes));
-    alert("Quiz Saved!");
+
+    newQuiz = []; // reset
+
     window.location.href = "dashboard.html";
 }
 
 /* Start Quiz */
 function startQuiz(index) {
+    currentIndex = 0;
+    score = 0;
     localStorage.setItem("currentQuiz", index);
+    localStorage.setItem("currentIndex", 0);
     window.location.href = "quiz.html";
 }
     function deleteQuiz(index) {
@@ -117,7 +160,10 @@ function loadQuestion() {
 
     let q = quiz.questions[currentIndex];
 
-    document.getElementById("question").innerText = q.question;
+   document.getElementById("question").innerText =
+    "Question " + (currentIndex + 1) + " of " +
+    quiz.questions.length + ": " + q.question;
+    selectedOption = null;
 
     let html = "";
     q.options.forEach((opt, i) => {
@@ -126,7 +172,7 @@ function loadQuestion() {
 
     document.getElementById("options").innerHTML = html;
 
-    let progress = (currentIndex / quiz.questions.length) * 100;
+   let progress = ((currentIndex + 1) / quiz.questions.length) * 100;
     document.getElementById("progressBar").style.width = progress + "%";
 }
 
@@ -139,10 +185,13 @@ function selectOption(el, index) {
 }
 
 function nextQuestion() {
-    let quiz = quizzes[localStorage.getItem("currentQuiz")];
 
-    if (selectedOption == quiz.questions[currentIndex].correct)
+    let quizIndex = localStorage.getItem("currentQuiz");
+    let quiz = quizzes[quizIndex];
+
+    if (selectedOption == quiz.questions[currentIndex].correct) {
         score++;
+    }
 
     selectedOption = null;
     currentIndex++;
@@ -154,6 +203,20 @@ function nextQuestion() {
         localStorage.setItem("finalScore", score);
         window.location.href = "result.html";
     }
+}
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        localStorage.setItem("currentIndex", currentIndex);
+        loadQuestion();
+        resetTimer();
+    }
+}
+function quitQuiz() {
+    localStorage.removeItem("currentQuiz");
+    localStorage.removeItem("currentIndex");
+    localStorage.removeItem("score");
+    window.location.href = "dashboard.html";
 }
 
 /* Timer */
