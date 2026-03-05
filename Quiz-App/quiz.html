@@ -20,10 +20,13 @@
     <div id="options"></div>
 
     <button onclick="nextQuestion()">Next</button>
+    <button onclick="prevQuestion()">Back</button>
+    <button onclick="quitQuiz()">Quit</button>
 
 </div>
 
-<script src="script.js">
+<script src="script.js"></script>
+<script>
     if (!localStorage.getItem("user")) {
     window.location.href = "index.html";
 }
