@@ -16,7 +16,7 @@ function Home() {
   // Fetch products from backend
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/products")
+      .get("https://e-commerce-backend-0j0w.onrender.com/api/products")
       .then((res) => setProducts(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -109,5 +109,6 @@ function Home() {
     </>
   );
 }
+
 
 export default Home;
