@@ -17,7 +17,7 @@ function Bill() {
     setTotal(sum);
 
     if (loggedUser && items.length > 0) {
-      axios.post("http://localhost:5000/api/create-order", {
+      axios.post("https://e-commerce-backend-0j0w.onrender.com/api/create-order", {
         user: loggedUser,
         cartItems: items,
         total: sum,
@@ -46,5 +46,6 @@ function Bill() {
     </div>
   );
 }
+
 
 export default Bill;
