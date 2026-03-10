@@ -6,15 +6,14 @@ router.post("/create-order", async (req, res) => {
   try {
     const { user, cartItems, total } = req.body;
 
-   const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
     const itemList = cartItems
@@ -25,8 +24,7 @@ router.post("/create-order", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: "Order Confirmation - E-commerce Store",
-      text: `
-Hello ${user.name},
+      text: `Hello ${user.name},
 
 Your order has been placed successfully!
 
@@ -37,8 +35,7 @@ Total: ₹${total}
 
 Thank you for shopping with us!
 
-- Pragati Store
-      `,
+- Pragati Store`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -51,5 +48,5 @@ Thank you for shopping with us!
   }
 });
 
-
 module.exports = router;
+
