@@ -1,26 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 router.post("/create-order", async (req, res) => {
   try {
     const { user, cartItems, total } = req.body;
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
     const itemList = cartItems
       .map((item) => `${item.name} - ₹${item.price}`)
       .join("\n");
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
       to: user.email,
-      subject: "Order Confirmation - E-commerce Store",
+      subject: "Order Confirmation - Pragati Store",
       text: `Hello ${user.name},
 
 Your order has been placed successfully!
@@ -32,10 +27,8 @@ Total: ₹${total}
 
 Thank you for shopping with us!
 
-- Pragati Store`,
-    };
-
-    await transporter.sendMail(mailOptions);
+- Pragati Store`
+    });
 
     res.json({ message: "Order placed and email sent!" });
 
@@ -45,6 +38,10 @@ Thank you for shopping with us!
   }
 });
 
+  
+
+
 module.exports = router;
+
 
 
