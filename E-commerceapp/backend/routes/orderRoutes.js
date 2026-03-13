@@ -13,7 +13,7 @@ router.post("/create-order", async (req, res) => {
       .join("\n");
 
     await resend.emails.send({
-      from: "onboarding@resend.dev",
+     from: "Pragati Store <onboarding@resend.dev>",
       to: user.email,
       subject: "Order Confirmation - Pragati Store",
       text: `Hello ${user.name},
@@ -42,6 +42,7 @@ Thank you for shopping with us!
 
 
 module.exports = router;
+
 
 
 
